@@ -59,6 +59,7 @@ export default function ShellLayout({ children }) {
                 type="text"
                 placeholder="Search orders, products or artisans..."
                 className="w-full rounded-xl border border-[#e9d8d8] bg-[#fff] px-4 py-2 text-sm placeholder:text-[#aa96a3] focus:outline-none focus:ring-2 focus:ring-[#c67e93]"
+                suppressHydrationWarning
               />
             </div>
           </div>
