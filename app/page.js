@@ -1,65 +1,99 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useEffect, useState } from "react";
+
+export default function Page() {
+  const [dashboard, setDashboard] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await fetch("/api/dashboard");
+        if (!res.ok) throw new Error("Dashboard API error");
+        const data = await res.json();
+        setDashboard(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return <div className="text-red-600">Error loading dashboard: {error}</div>;
+  }
+
+  if (!dashboard) {
+    return <div className="text-[#6f1f3f]">Loading dashboard...</div>;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="space-y-6">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {dashboard.metrics.map((card) => (
+          <article
+            key={card.label}
+            className={`rounded-2xl border p-5 shadow-sm ${card.highlight ? "bg-[#681f32] text-white" : "bg-white"}`}
+          >
+            <p className="text-xs tracking-widest text-[#7b4f60]">
+              {card.label}
+            </p>
+            <h2
+              className={`mt-2 text-4xl font-bold ${card.highlight ? "text-white" : "text-[#651824]"}`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              {card.value}
+            </h2>
+            <p
+              className={`mt-1 text-sm font-semibold ${card.highlight ? "text-[#f7d6e2]" : "text-[#77616f]"}`}
             >
-              Learning
-            </a>{" "}
-            center.
+              {card.trend}
+            </p>
+          </article>
+        ))}
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2 rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 className="text-2xl font-bold text-[#6f1f3f]">
+            Order Trajectory
+          </h3>
+          <p className="mt-2 text-sm text-[#6f4f5f]">
+            Performance metrics across curated collections
           </p>
+          <div className="mt-6 h-52 rounded-xl bg-gradient-to-r from-[#f3e8e9] to-[#fff6f5] p-4">
+            <ul className="flex h-full items-center justify-between text-xs text-[#7f5e6b]">
+              {dashboard.orderTrajectory.labels.map((label, index) => (
+                <li key={label} className="flex-1 text-center">
+                  {label}: {dashboard.orderTrajectory.points[index]}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+          <h3 className="text-2xl font-bold text-[#6f1f3f]">Revenue Streams</h3>
+          <p className="mt-2 text-sm text-[#6f4f5f]">
+            Allocation by bespoke category
+          </p>
+          {dashboard.revenueStreams.map((item) => (
+            <div key={item.label} className="mt-4">
+              <div className="flex justify-between text-sm font-semibold text-[#5a3744]">
+                <span>{item.label}</span>
+                <span>{item.value}%</span>
+              </div>
+              <div className="mt-1 h-2 w-full rounded-full bg-[#f4dce0]">
+                <div
+                  className="h-2 rounded-full bg-[#7f1f3d]"
+                  style={{ width: `${item.value}%` }}
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
     </div>
   );
 }
