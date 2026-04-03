@@ -90,6 +90,7 @@ export default function ShellLayout({ children }) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search orders, products or artisans..."
+                suppressHydrationWarning={true}
                 className="w-full rounded-xl border-none bg-[#fdf8f4] pl-10 pr-10 py-2.5 text-sm placeholder:text-[#aa96a3] focus:outline-none focus:ring-1 focus:ring-[#c67e93]"
               />
               {search && (
