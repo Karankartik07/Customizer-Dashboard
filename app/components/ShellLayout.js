@@ -2,87 +2,143 @@
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { 
+  Search, Bell, X, Menu, LayoutDashboard, 
+  Package, Bookmark, ShoppingBag, Users 
+} from "lucide-react";
 
 const navItems = [
-  { label: "Dashboard", href: "/" },
-  { label: "Products", href: "/products" },
-  { label: "Product Saved", href: "/product-saved" },
-  { label: "Orders", href: "/orders" },
-  { label: "User Management", href: "/users" },
+  { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Products", href: "/products", icon: Package },
+  { label: "Product Saved", href: "/product-saved", icon: Bookmark },
+  { label: "Orders", href: "/orders", icon: ShoppingBag },
+  { label: "User Management", href: "/users", icon: Users },
 ];
 
 export default function ShellLayout({ children }) {
   const [search, setSearch] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const filteredNav = useMemo(
-    () =>
-      navItems.filter((item) =>
-        item.label.toLowerCase().includes(search.toLowerCase()),
-      ),
-    [search],
+    () => navItems.filter((item) => item.label.toLowerCase().includes(search.toLowerCase())),
+    [search]
   );
 
   return (
-    <div className="min-h-screen flex">
-      <aside className="w-72 bg-white border-r border-[#f1d6d6] p-5 flex flex-col">
-        
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-[#5c1728]">
-            ATELIER ADMIN
-          </h1>
-          <p className="text-xs text-[#7a5a64] uppercase mt-1">
-            Luxury Concierge
-          </p>
+    <div className="min-h-screen flex bg-[#FFF8F1] relative">
+      
+      {/* SIDEBAR - Slides from left */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-[#f1d6d6] transition-transform duration-300 ease-in-out flex flex-col
+        lg:relative lg:translate-x-0 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <div className="p-8 mb-4 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-[#5c1728]">ATELIER ADMIN</h1>
+            <p className="text-[10px] font-bold text-[#7a5a64] uppercase mt-1 tracking-widest">Luxury Concierge</p>
+          </div>
+          <button onClick={() => setIsMenuOpen(false)} className="lg:hidden p-1 text-[#5c1728]">
+            <X className="w-6 h-6" />
+          </button>
         </div>
-        <nav className="space-y-2">
-          {filteredNav.length ? (
-            filteredNav.map((item) => (
+        
+        <nav className="flex-1">
+          {filteredNav.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
               <Link
                 key={item.href}
                 href={item.href}
-                className="block rounded-xl px-3 py-2 text-sm font-semibold text-[#58112a] hover:bg-[#f9e6e9]"
+                onClick={() => setIsMenuOpen(false)}
+                className={`relative flex items-center gap-3 px-8 py-4 text-sm font-semibold transition-all
+                  ${isActive ? "bg-[#fdf3f3] text-[#5c1728]" : "text-[#7a5a64] hover:bg-[#faf5f5]"}
+                `}
               >
+                <Icon className="w-5 h-5" />
                 {item.label}
+                {isActive && <div className="absolute right-0 top-0 bottom-0 w-1 bg-[#5c1728]" />}
               </Link>
-            ))
-          ) : (
-            <p className="text-sm text-[#8c6a7d]">No routes found</p>
-          )}
+            );
+          })}
         </nav>
       </aside>
 
-      <div className="flex-1 flex flex-col">
-        <header className="flex items-center justify-between border-b border-[#f1d6d6] bg-white p-4">
+      {/* Backdrop */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-black/20 z-40 lg:hidden" onClick={() => setIsMenuOpen(false)} />
+      )}
+
+      {/* MAIN CONTENT */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="flex items-center justify-between bg-white px-8 py-4">
+          
+          {/* SEARCH BAR - Kept your original styling */}
           <div className="flex items-center gap-3 w-full max-w-lg">
-            <div className="relative flex-1">
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aa96a3]" />
               <input
                 type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search orders, products or artisans..."
-                className="w-full rounded-xl border border-[#e9d8d8] bg-[#fff] px-4 py-2 text-sm placeholder:text-[#aa96a3] focus:outline-none focus:ring-2 focus:ring-[#c67e93]"
-                suppressHydrationWarning
+                className="w-full rounded-xl border-none bg-[#fdf8f4] pl-10 pr-10 py-2.5 text-sm placeholder:text-[#aa96a3] focus:outline-none focus:ring-1 focus:ring-[#c67e93]"
               />
+              {search && (
+                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#aa96a3]">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
+{/* RIGHT SIDE: Notifications | Divider | Profile Section */}
+<div className="flex items-center gap-6">
+  {/* Notification Bell */}
+  <button className="relative text-[#7a5a64] p-1">
+    <Bell className="w-6 h-6 stroke-[1.5]" />
+    <span className="absolute top-1 right-1.5 w-2.5 h-2.5 bg-[#b33a3a] rounded-full border-2 border-white"></span>
+  </button>
 
-          <div className="flex items-center gap-3">
-            <button className="rounded-lg border border-[#d9bac4] px-3 py-1 text-sm font-bold text-[#6c3f4e] hover:bg-[#f7e2e8]">
-              View Orders
-            </button>
-            <button className="rounded-xl bg-[#7f1f3d] px-4 py-2 text-sm font-semibold text-white hover:bg-[#6f1a35]">
-              + Add Product
-            </button>
-            <div className="flex items-center gap-2 rounded-full border border-[#f1d6d6] bg-[#fff] px-3 py-2">
-              <div className="h-8 w-8 rounded-full bg-[#dfb2bf]" />
-              <div>
-                <p className="text-sm font-semibold text-[#4c2a36]">
-                  Julian Beaumont
-                </p>
-                <p className="text-xs text-[#a3808f]">Master Curator</p>
-              </div>
-            </div>
-          </div>
+  {/* The Vertical Divider Line */}
+  <div className="h-10 w-[1px] bg-[#e9d8d8] mx-2" />
+
+  {/* Profile Section - Aligned exactly as Image */}
+  <div className="flex items-center gap-4">
+    <div className="text-right flex flex-col justify-center">
+      <h3 className="text-lg font-bold text-[#5c1728] leading-none mb-1">
+        Julian Beaumont
+      </h3>
+      <p className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-[0.15em] leading-none">
+        Master Curator
+      </p>
+    </div>
+
+    {/* Avatar - Matches the 40x40 / 48x48 Figma Scale */}
+    <div className="h-12 w-12 rounded-full border border-[#d1d9cc] overflow-hidden flex-shrink-0 bg-[#e3e8de] flex items-center justify-center">
+      <img 
+        src="https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775193397/Admin_Avatar_bfklij.png" 
+        alt="Julian Beaumont" 
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+    {/* Hamburger for Mobile - Hidden on Desktop */}
+    <button 
+      onClick={() => setIsMenuOpen(true)}
+      className="lg:hidden p-2 border border-[#f1d6d6] rounded-lg text-[#5c1728] ml-2"
+    >
+      <Menu className="w-6 h-6" />
+    </button>
+  </div>
+</div>
+          
         </header>
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+
+        <main className="flex-1 overflow-auto p-8">
+          {children}
+        </main>
       </div>
     </div>
   );
