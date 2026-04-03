@@ -1,129 +1,173 @@
 "use client";
-
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  FiMoreHorizontal, FiDownload, FiFilter, 
-  FiChevronLeft, FiChevronRight, FiX, 
-  FiSettings, FiDatabase, FiImage, FiMaximize, FiCheckCircle 
-} from "react-icons/fi";
+import { FiMoreHorizontal, FiX, FiSettings, FiDatabase, FiImage, FiCheckCircle, FiMaximize2, FiChevronLeft, FiChevronRight, FiDownload, FiSliders } from "react-icons/fi";
 
+const C = { wine:"#6d0f1f", dark:"#4d0a15", muted:"#7a5a64", cream:"#fdf8f4", bg:"#fdf3f3", border:"#f1d6d6", gray:"#e5e7eb", white:"#ffffff" };
+
+/* ── Toggle ── */
+const Toggle = ({ on, onChange }) => (
+  <button onClick={onChange} role="switch" aria-checked={on}
+    style={{ position:"relative", width:40, height:22, borderRadius:999, border:"none", cursor:"pointer", background:on?C.wine:C.gray, flexShrink:0, padding:0, transition:"background .25s" }}>
+    <span style={{ position:"absolute", top:3, left:on?"calc(100% - 19px)":3, width:16, height:16, borderRadius:"50%", background:C.white, boxShadow:"0 1px 3px rgba(0,0,0,.2)", transition:"left .25s", display:"block" }} />
+  </button>
+);
+
+/* ── Thumb placeholder ── */
+const Thumb = () => (
+  <div style={{ width:52, height:52, borderRadius:14, background:"#f4ebe8", border:`1px solid ${C.border}`, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="3" fill="#e8d5cf"/>
+      <circle cx="8.5" cy="8.5" r="2.5" fill="#c9a89e"/>
+      <path d="M3 16l5-5 4 4 3-3 6 6" stroke="#c9a89e" strokeWidth="1.5" fill="none"/>
+    </svg>
+  </div>
+);
+
+/* ── IconBtn ── */
+const IconBtn = ({ children, onClick, style: s = {} }) => {
+  const [h, setH] = useState(false);
+  return (
+    <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ width:34, height:34, borderRadius:10, border:`1px solid ${C.border}`, background:h?C.bg:C.cream, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:C.muted, ...s }}>
+      {children}
+    </button>
+  );
+};
+
+/* ── MenuItem — own component so hooks are legal ── */
+const MenuItem = ({ icon, label, onClick }) => {
+  const [h, setH] = useState(false);
+  return (
+    <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ display:"flex", alignItems:"center", gap:10, width:"100%", textAlign:"left", border:"none", padding:"10px 16px", cursor:"pointer", fontSize:11, fontWeight:700, color:C.wine, background:h?C.cream:"transparent", transition:"background .15s" }}>
+      <span style={{ opacity:.65, display:"flex" }}>{icon}</span>{label}
+    </button>
+  );
+};
+
+/* ── PageBtn ── */
+const PageBtn = ({ children, active, onClick }) => {
+  const [h, setH] = useState(false);
+  return (
+    <button onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+      style={{ minWidth:34, height:34, borderRadius:10, border:active?"none":`1px solid ${C.border}`, background:active?C.wine:h?C.bg:C.cream, color:active?C.white:C.muted, fontSize:12, fontWeight:700, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", padding:"0 4px", transition:"all .15s" }}>
+      {children}
+    </button>
+  );
+};
+
+/* ══════════════════════════════════════════ */
 export default function ProductsPage() {
-  // --- STATES ---
-  const [activeMenu, setActiveMenu] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [productType, setProductType] = useState("2D");
-  
-  // State for the modal sliders
-  const [modalSettings, setModalSettings] = useState({
-    aiEditor: true,
-    imageEdit: true,
-    textEdit: true,
-    colors: false,
-    clipart: false
-  });
-
+  const [menu,  setMenu]  = useState(null);
+  const [modal, setModal] = useState(false);
+  const [type,  setType]  = useState("2D");
+  const [page,  setPage]  = useState(1);
   const menuRef = useRef(null);
 
-  // --- HANDLERS ---
-  const toggleModalOption = (key) => {
-    setModalSettings(prev => ({ ...prev, [key]: !prev[key] }));
-  };
+  const [opts, setOpts] = useState({ aiEditor:true, imageEdit:true, textEdit:true, colors:false, clipart:false });
+  const [rows, setRows] = useState([
+    { id:"01", name:"Midnight Velvet Blazer",    sub:"BESPOKE COLLECTION", sku:"AT-MVB-2024-X", on:true  },
+    { id:"02", name:"Oxford Wool Trousers",       sub:"DAILY LUXURY",       sku:"AT-OWT-1888-M", on:true  },
+    { id:"03", name:"Hand-Stitched Brogues",      sub:"FOOTWEAR ARTISAN",   sku:"AT-HSB-4491-L", on:false },
+    { id:"04", name:"Silk Paisley Pocket Square", sub:"ACCESSORIES",        sku:"AT-PPS-0092-U", on:true  },
+  ]);
 
-  const productImages = {
-    blazer: "https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775201379/Background_kvxeey.png",
-    trousers: "https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775201379/Background_kvxeey.png",
-    brogues: "https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775201379/Background_kvxeey.png",
-    pocketSquare: "https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775201379/Background_kvxeey.png",
-  };
+  useEffect(() => {
+    const h = e => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenu(null); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
 
-  const products = [
-    { id: "01", name: "Midnight Velvet Blazer", sub: "BESPOKE COLLECTION", sku: "AT-MVB-2024-X", status: true, img: productImages.blazer },
-    { id: "02", name: "Oxford Wool Trousers", sub: "DAILY LUXURY", sku: "AT-OWT-1888-M", status: true, img: productImages.trousers },
-    { id: "03", name: "Hand-Stitched Brogues", sub: "FOOTWEAR ARTISAN", sku: "AT-HSB-4451-L", status: false, img: productImages.brogues },
-    { id: "04", name: "Silk Paisley Pocket Square", sub: "ACCESSORIES", sku: "AT-PPS-0092-U", status: true, img: productImages.pocketSquare },
+  const toggleRow = id => setRows(p => p.map(r => r.id === id ? { ...r, on: !r.on } : r));
+  const toggleOpt = key => setOpts(p => ({ ...p, [key]: !p[key] }));
+
+  const TH = ({ ch, align = "left", pl = 14 }) => (
+    <th style={{ fontSize:10, fontWeight:700, color:C.muted, opacity:.4, letterSpacing:"0.14em", textTransform:"uppercase", padding:`0 14px 14px`, paddingLeft:pl, textAlign:align, whiteSpace:"nowrap" }}>{ch}</th>
+  );
+
+  const toggleOpts = [
+    { key:"aiEditor", label:"AI Editor" }, { key:"imageEdit", label:"Image Edit" },
+    { key:"textEdit", label:"Text Edit" }, { key:"colors",    label:"Colors"     },
+    { key:"clipart",  label:"Clipart"   },
   ];
 
   return (
-    <div className="space-y-6 relative min-h-screen">
-      
-      {/* 1. HEADER SECTION */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div style={{ background:C.cream, minHeight:"100vh",  boxSizing:"border-box" }}>
+
+      {/* HEADER */}
+      <div style={{ display:"flex", flexWrap:"wrap", gap:16, justifyContent:"space-between", alignItems:"flex-start", marginBottom:28 }}>
         <div>
-          <h2 className="text-2xl font-bold text-[#6d0f1f]">Products List</h2>
-          <p className="text-sm text-[#7a5a64] mt-1 font-medium opacity-80">
-            Manage and create your bespoke inventory collections.
-          </p>
+          <h2 style={{ margin:0, fontSize:"clamp(18px,3vw,22px)", fontWeight:700, color:C.wine }}>Products List</h2>
+          <p style={{ margin:"6px 0 0", fontSize:13, color:C.muted, fontWeight:500, opacity:.8 }}>Manage and create your bespoke inventory collections.</p>
         </div>
-        <div className="flex bg-[#fdf8f4] p-1.5 rounded-full border border-[#f1d6d6]">
-          <button className="px-5 py-1.5 text-[10px] font-bold text-[#7a5a64] uppercase tracking-wider rounded-full">2D MODEL</button>
-          <button className="px-5 py-1.5 text-[10px] font-bold bg-white text-[#6d0f1f] rounded-full shadow-sm border border-[#f1d6d6] uppercase tracking-wider">3D MODELS</button>
+        <div style={{ display:"flex", background:C.cream, padding:5, borderRadius:999, border:`1px solid ${C.border}`, gap:2 }}>
+          {["2D MODEL","3D MODELS"].map(lbl => {
+            const val = lbl === "2D MODEL" ? "2D" : "3D", active = type === val;
+            return (
+              <button key={lbl} onClick={() => setType(val)}
+                style={{ padding:"7px clamp(12px,2vw,20px)", fontSize:10, fontWeight:700, letterSpacing:"0.12em", borderRadius:999, cursor:"pointer", transition:"all .2s", background:active?C.white:"transparent", border:active?`1px solid ${C.border}`:"1px solid transparent", color:active?C.wine:C.muted, boxShadow:active?"0 1px 4px rgba(109,15,31,.1)":"none" }}>
+                {lbl}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* 2. TABLE SECTION */}
-      <div className="bg-white rounded-[32px] border border-[#fdf3f3] overflow-visible shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+      {/* TABLE CARD */}
+      <div style={{ background:C.white, borderRadius:28, border:`1px solid ${C.bg}`, boxShadow:"0 1px 8px rgba(109,15,31,.04)", overflow:"hidden" }}>
+
+        {/* toolbar */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 24px 14px", borderBottom:`1px solid ${C.bg}`, flexWrap:"wrap", gap:12 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+            <div style={{ width:17, height:17, borderRadius:4, border:`2px solid ${C.border}` }} />
+            <span style={{ fontSize:11, fontWeight:700, color:C.muted, letterSpacing:"0.08em", textTransform:"uppercase" }}>Bulk Select</span>
+            <span style={{ fontSize:11, color:C.muted, opacity:.5, marginLeft:6 }}>Showing 15 of 36 products</span>
+          </div>
+          <div style={{ display:"flex", gap:8 }}>
+            <IconBtn><FiSliders size={14}/></IconBtn>
+            <IconBtn><FiDownload size={14}/></IconBtn>
+          </div>
+        </div>
+
+        {/* table */}
+        <div style={{ overflowX:"auto", WebkitOverflowScrolling:"touch" }}>
+          <table style={{ width:"100%", borderCollapse:"collapse", minWidth:560 }}>
             <thead>
-              <tr className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-[0.15em] opacity-40">
-                <th className="px-8 py-6">S.NO</th>
-                <th className="px-4 py-6">IMAGE</th>
-                <th className="px-4 py-6">PRODUCT NAME</th>
-                <th className="px-4 py-6">SKU</th>
-                <th className="px-4 py-6 text-center">STATUS</th>
-                <th className="px-8 py-6 text-right">ACTIONS</th>
+              <tr style={{ borderBottom:`1px solid ${C.bg}` }}>
+                <TH ch="S.No" pl={28}/><TH ch="Image"/><TH ch="Product Name"/><TH ch="SKU"/><TH ch="Status" align="center"/><TH ch="Actions" align="right"/>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#fdf3f3]">
-              {products.map((item) => (
-                <tr key={item.id} className="group hover:bg-[#fdf8f4]/30 transition-colors relative">
-                  <td className="px-8 py-5 text-sm font-medium text-[#7a5a64] opacity-30">{item.id}</td>
-                  <td className="px-4 py-5">
-                    <div className="w-14 h-14 rounded-2xl bg-[#f4ebe8] overflow-hidden border border-[#f1d6d6]">
-                      <img src={item.img} alt="" className="w-full h-full object-cover" />
+            <tbody>
+              {rows.map((r, i) => (
+                <tr key={r.id} style={{ borderBottom:i<rows.length-1?`1px solid ${C.bg}`:"none" }}
+                  onMouseEnter={e => e.currentTarget.style.background="rgba(253,248,244,.45)"}
+                  onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+                  <td style={{ padding:"18px 14px 18px 28px", fontSize:13, fontWeight:600, color:C.muted, opacity:.35 }}>{r.id}</td>
+                  <td style={{ padding:"18px 14px" }}><Thumb /></td>
+                  <td style={{ padding:"18px 14px" }}>
+                    <p style={{ margin:0, fontSize:14, fontWeight:700, color:C.wine }}>{r.name}</p>
+                    <p style={{ margin:"7px 0 0", fontSize:10, fontWeight:700, color:C.muted, letterSpacing:"0.12em", opacity:.5 }}>{r.sub}</p>
+                  </td>
+                  <td style={{ padding:"18px 14px" }}>
+                    <span style={{ background:C.cream, border:`1px solid ${C.border}`, borderRadius:7, padding:"4px 9px", fontSize:10, fontWeight:700, color:C.muted, whiteSpace:"nowrap" }}>{r.sku}</span>
+                  </td>
+                  <td style={{ padding:"18px 14px" }}>
+                    <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:10 }}>
+                      <Toggle on={r.on} onChange={() => toggleRow(r.id)} />
+                      <span style={{ fontSize:10, fontWeight:700, color:C.muted, letterSpacing:"0.1em", textTransform:"uppercase", minWidth:38 }}>{r.on?"Unhide":"Hide"}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-5">
-                    <p className="text-[14px] font-bold text-[#6d0f1f] leading-none">{item.name}</p>
-                    <p className="text-[10px] font-bold text-[#7a5a64] mt-2 uppercase tracking-wider opacity-50">{item.sub}</p>
-                  </td>
-                  <td className="px-4 py-5">
-                    <span className="bg-[#fdf8f4] px-2 py-1 rounded-md text-[10px] font-bold text-[#7a5a64] border border-[#f1d6d6]">
-                      {item.sku}
-                    </span>
-                  </td>
-                  <td className="px-4 py-5">
-                    <div className="flex items-center justify-center gap-3">
-                      <div className={`w-10 h-5 rounded-full relative transition-all duration-300 ${item.status ? 'bg-[#6d0f1f]' : 'bg-[#e5e7eb]'}`}>
-                        <div className={`absolute top-1 w-3 h-3 bg-white rounded-full shadow-sm transition-all duration-300 ${item.status ? 'right-1' : 'left-1'}`} />
-                      </div>
-                      <span className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-widest w-12 text-left">
-                        {item.status ? "Unhide" : "Hide"}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-8 py-5 text-right relative">
-                    <button 
-                      onClick={() => setActiveMenu(activeMenu === item.id ? null : item.id)}
-                      className="p-2 text-[#7a5a64] hover:text-[#6d0f1f] transition-all"
-                    >
-                      <FiMoreHorizontal size={22} />
+                  <td style={{ padding:"18px 28px 18px 14px", textAlign:"right", position:"relative" }}>
+                    <button onClick={() => setMenu(menu === r.id ? null : r.id)}
+                      style={{ background:"transparent", border:"none", cursor:"pointer", color:C.muted, padding:6, borderRadius:8, display:"inline-flex", alignItems:"center" }}>
+                      <FiMoreHorizontal size={20}/>
                     </button>
-
-                    {activeMenu === item.id && (
-                      <div ref={menuRef} className="absolute right-14 top-4 w-48 bg-white border border-[#f1d6d6] rounded-2xl shadow-xl z-50 py-2">
-                        <button 
-                          onClick={() => { setIsModalOpen(true); setActiveMenu(null); }} 
-                          className="w-full text-left px-4 py-2.5 text-[11px] font-bold text-[#6d0f1f] hover:bg-[#fdf8f4] flex items-center gap-3"
-                        >
-                          <FiSettings /> Edit Tab Settings
-                        </button>
-                        <button className="w-full text-left px-4 py-2.5 text-[11px] font-bold text-[#6d0f1f] hover:bg-[#fdf8f4] flex items-center gap-3">
-                          <FiDatabase /> Customize Data
-                        </button>
-                        <button className="w-full text-left px-4 py-2.5 text-[11px] font-bold text-[#6d0f1f] hover:bg-[#fdf8f4] flex items-center gap-3">
-                          <FiImage /> Customize Image
-                        </button>
+                    {menu === r.id && (
+                      <div ref={menuRef} style={{ position:"absolute", right:52, top:12, zIndex:200, background:C.white, border:`1px solid ${C.border}`, borderRadius:18, boxShadow:"0 8px 32px rgba(109,15,31,.13)", padding:"6px 0", minWidth:186 }}>
+                        <MenuItem icon={<FiSettings size={13}/>}  label="Edit Tab Settings" onClick={() => { setModal(true); setMenu(null); }} />
+                        <MenuItem icon={<FiDatabase size={13}/>}  label="Customize Data"    onClick={() => setMenu(null)} />
+                        <MenuItem icon={<FiImage size={13}/>}     label="Customize Image"   onClick={() => setMenu(null)} />
+                        <MenuItem icon={<FiMaximize2 size={13}/>} label="Set Width & Height" onClick={() => setMenu(null)} />
                       </div>
                     )}
                   </td>
@@ -132,76 +176,75 @@ export default function ProductsPage() {
             </tbody>
           </table>
         </div>
+
+        {/* pagination */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 28px", borderTop:`1px solid ${C.bg}`, flexWrap:"wrap", gap:12 }}>
+          <span style={{ fontSize:12, color:C.muted, fontWeight:500 }}>Showing <b style={{ color:C.wine }}>1–4</b> of <b style={{ color:C.wine }}>128</b> products</span>
+          <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+            <PageBtn onClick={() => setPage(p => Math.max(1, p-1))}><FiChevronLeft size={14}/></PageBtn>
+            {[1,2,3,"…",12].map((p,i) => (
+              <PageBtn key={i} active={p === page} onClick={() => typeof p === "number" && setPage(p)}>{p}</PageBtn>
+            ))}
+            <PageBtn onClick={() => setPage(p => Math.min(12, p+1))}><FiChevronRight size={14}/></PageBtn>
+          </div>
+        </div>
       </div>
 
-      {/* --- 3. EDIT PRODUCT SETTINGS MODAL (FIGMA EXACT MATCH) --- */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#5c1728]/10 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white w-[576px] rounded-[32px] shadow-2xl border border-[#f1d6d6] overflow-hidden p-10 relative">
-            
-            {/* Close Button */}
-            <button onClick={() => setIsModalOpen(false)} className="absolute right-10 top-10 text-[#7a5a64] hover:text-[#6d0f1f] transition-all">
-              <FiX size={24} />
+      {/* MODAL */}
+      {modal && (
+        <div onClick={() => setModal(false)}
+          style={{ position:"fixed", inset:0, zIndex:300, background:"rgba(92,23,40,.10)", backdropFilter:"blur(6px)", display:"flex", alignItems:"center", justifyContent:"center", padding:"clamp(12px,4vw,32px)" }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background:C.white, borderRadius:24, border:`1px solid ${C.border}`, boxShadow:"0 24px 64px rgba(109,15,31,.16)", padding:"clamp(24px,5vw,36px)", width:"100%", maxWidth:500, position:"relative", boxSizing:"border-box" }}>
+
+            <button onClick={() => setModal(false)}
+              style={{ position:"absolute", top:24, right:24, background:"transparent", border:"none", cursor:"pointer", color:C.muted, display:"flex" }}>
+              <FiX size={22}/>
             </button>
 
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-10">
-              <div className="p-2.5 bg-[#fdf3f3] rounded-xl text-[#6d0f1f]">
-                <FiSettings size={22} />
-              </div>
-              <h3 className="text-xl font-bold text-[#6d0f1f]">Edit Product Settings</h3>
+            <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:28 }}>
+              <div style={{ width:38, height:38, borderRadius:12, background:C.bg, color:C.wine, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><FiSettings size={17}/></div>
+              <h3 style={{ margin:0, fontSize:"clamp(15px,3vw,18px)", fontWeight:700, color:C.wine }}>Edit Product Settings</h3>
             </div>
 
-            {/* Product Type Toggle */}
-            <div className="flex items-center justify-between mb-10">
-              <span className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-[0.2em] opacity-60">Product Type</span>
-              <div className="flex bg-[#f4ebe8]/50 p-1.5 rounded-2xl border border-[#f1d6d6]/50">
-                <button 
-                  onClick={() => setProductType("2D")}
-                  className={`px-8 py-2 text-[11px] font-extrabold rounded-xl transition-all ${productType === "2D" ? "bg-[#6d0f1f] text-white shadow-md" : "text-[#7a5a64]"}`}
-                >
-                  2D
-                </button>
-                <button 
-                  onClick={() => setProductType("3D")}
-                  className={`px-8 py-2 text-[11px] font-extrabold rounded-xl transition-all ${productType === "3D" ? "bg-[#6d0f1f] text-white shadow-md" : "text-[#7a5a64]"}`}
-                >
-                  3D
-                </button>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:24, flexWrap:"wrap", gap:12 }}>
+              <span style={{ fontSize:10, fontWeight:700, color:C.muted, letterSpacing:"0.18em", textTransform:"uppercase", opacity:.6 }}>Product Type</span>
+              <div style={{ display:"flex", background:"rgba(244,235,232,.5)", padding:4, borderRadius:14, border:"1px solid rgba(241,214,214,.5)", gap:2 }}>
+                {["2D","3D"].map(t => {
+                  const active = type === t;
+                  return (
+                    <button key={t} onClick={() => setType(t)}
+                      style={{ padding:"8px clamp(16px,3vw,26px)", fontSize:11, fontWeight:800, borderRadius:11, border:"none", cursor:"pointer", transition:"all .2s", background:active?C.wine:"transparent", color:active?C.white:C.muted, boxShadow:active?"0 2px 8px rgba(109,15,31,.22)":"none" }}>
+                      {t}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Sliders List (All functional) */}
-            <div className="space-y-4 mb-10">
-              {[
-                { label: "AI Editor", key: "aiEditor" },
-                { label: "Image Edit", key: "imageEdit" },
-                { label: "Text Edit", key: "textEdit" },
-                { label: "Colors", key: "colors" },
-                { label: "Clipart", key: "clipart" },
-              ].map((opt) => (
-                <div 
-                  key={opt.key} 
-                  onClick={() => toggleModalOption(opt.key)}
-                  className="flex items-center justify-between bg-[#fdf8f4]/60 p-5 rounded-[20px] border border-[#f1d6d6]/30 cursor-pointer hover:bg-[#fdf8f4] transition-all"
-                >
-                  <span className={`text-xs font-extrabold tracking-wide ${modalSettings[opt.key] ? 'text-[#6d0f1f]' : 'text-[#7a5a64] opacity-50'}`}>
-                    {opt.label}
-                  </span>
-                  {/* Modal Slider (Working) */}
-                  <div className={`w-10 h-5 rounded-full relative transition-all duration-300 ${modalSettings[opt.key] ? 'bg-[#6d0f1f]' : 'bg-[#e5e7eb]'}`}>
-                    <div className={`absolute top-1 w-3 h-3 bg-white rounded-full transition-all duration-300 ${modalSettings[opt.key] ? 'right-1' : 'left-1'}`} />
+            {/* toggle rows: toggle LEFT, label RIGHT */}
+            <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:28 }}>
+              {toggleOpts.map(({ key, label }) => {
+                const on = opts[key];
+                return (
+                  <div key={key} onClick={() => toggleOpt(key)}
+                    style={{ display:"flex", alignItems:"center", gap:14, background:on?"rgba(253,248,244,.9)":"rgba(253,248,244,.4)", border:`1px solid ${on?"rgba(241,214,214,.7)":"rgba(241,214,214,.25)"}`, borderRadius:14, padding:"14px 18px", cursor:"pointer", transition:"all .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.background = C.cream}
+                    onMouseLeave={e => e.currentTarget.style.background = on ? "rgba(253,248,244,.9)" : "rgba(253,248,244,.4)"}>
+                    <Toggle on={on} onChange={e => { e?.stopPropagation?.(); toggleOpt(key); }} />
+                    <span style={{ fontSize:12, fontWeight:800, color:on?C.wine:C.muted, opacity:on?1:.5 }}>{label}</span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
-            {/* Update Button */}
-            <button 
-              onClick={() => setIsModalOpen(false)}
-              className="w-full bg-[#6d0f1f] text-white py-4.5 rounded-2xl font-bold text-xs uppercase tracking-[0.25em] flex items-center justify-center gap-3 hover:bg-[#4d0a15] transition-all shadow-xl shadow-red-900/20 active:scale-[0.98]"
-            >
-              <FiCheckCircle size={18} /> Update Product Settings
+            <button onClick={() => setModal(false)}
+              onMouseEnter={e => e.currentTarget.style.background = C.dark}
+              onMouseLeave={e => e.currentTarget.style.background = C.wine}
+              onMouseDown={e => e.currentTarget.style.transform = "scale(0.98)"}
+              onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}
+              style={{ width:"100%", background:C.wine, color:C.white, border:"none", borderRadius:14, padding:"clamp(13px,2vw,16px) 24px", fontSize:11, fontWeight:700, letterSpacing:"0.2em", textTransform:"uppercase", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:10, boxShadow:"0 8px 24px rgba(109,15,31,.25)", transition:"background .2s, transform .1s" }}>
+              <FiCheckCircle size={16}/> Update Product Settings
             </button>
           </div>
         </div>
