@@ -27,14 +27,17 @@ export default function ShellLayout({ children }) {
   );
 
   return (
-    <div className="min-h-screen flex bg-[#FFF8F1] relative">
+    /* h-screen and overflow-hidden on this parent container 
+       locks the main window so it doesn't scroll as a whole. */
+    <div className="h-screen w-full flex bg-[#FFF8F1] overflow-hidden relative font-sans">
       
       {/* SIDEBAR - Slides from left */}
       <aside className={`
         fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-[#f1d6d6] transition-transform duration-300 ease-in-out flex flex-col
         lg:relative lg:translate-x-0 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
-        <div className="p-8 mb-4 flex justify-between items-center">
+        {/* Logo Section - flex-shrink-0 keeps it from squishing */}
+        <div className="p-8 mb-4 flex justify-between items-center flex-shrink-0">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-[#5c1728]">ATELIER ADMIN</h1>
             <p className="text-[10px] font-bold text-[#7a5a64] uppercase mt-1 tracking-widest">Luxury Concierge</p>
@@ -44,7 +47,8 @@ export default function ShellLayout({ children }) {
           </button>
         </div>
         
-        <nav className="flex-1">
+        {/* Nav links - overflow-y-auto allows the sidebar to scroll if items exceed height */}
+        <nav className="flex-1 overflow-y-auto">
           {filteredNav.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -71,11 +75,13 @@ export default function ShellLayout({ children }) {
         <div className="fixed inset-0 bg-black/20 z-40 lg:hidden" onClick={() => setIsMenuOpen(false)} />
       )}
 
-      {/* MAIN CONTENT */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <header className="flex items-center justify-between bg-white px-8 py-4">
+      {/* RIGHT SIDE CONTAINER - Vertical Flexbox for Header + Main */}
+      <div className="flex-1 flex flex-col min-w-0 h-full">
+        
+        {/* HEADER - Stays fixed at the top of the content area */}
+        <header className="flex-shrink-0 h-20 flex items-center justify-between bg-white px-8 border-b border-[#fdf3f3] z-30">
           
-          {/* SEARCH BAR - Kept your original styling */}
+          {/* SEARCH BAR */}
           <div className="flex items-center gap-3 w-full max-w-lg">
             <div className="relative flex-1 group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aa96a3]" />
@@ -84,6 +90,7 @@ export default function ShellLayout({ children }) {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search orders, products or artisans..."
+                suppressHydrationWarning={true}
                 className="w-full rounded-xl border-none bg-[#fdf8f4] pl-10 pr-10 py-2.5 text-sm placeholder:text-[#aa96a3] focus:outline-none focus:ring-1 focus:ring-[#c67e93]"
               />
               {search && (
@@ -93,51 +100,49 @@ export default function ShellLayout({ children }) {
               )}
             </div>
           </div>
-{/* RIGHT SIDE: Notifications | Divider | Profile Section */}
-<div className="flex items-center gap-6">
-  {/* Notification Bell */}
-  <button className="relative text-[#7a5a64] p-1">
-    <Bell className="w-6 h-6 stroke-[1.5]" />
-    <span className="absolute top-1 right-1.5 w-2.5 h-2.5 bg-[#b33a3a] rounded-full border-2 border-white"></span>
-  </button>
 
-  {/* The Vertical Divider Line */}
-  <div className="h-10 w-[1px] bg-[#e9d8d8] mx-2" />
+          {/* RIGHT SIDE: Notifications | Divider | Profile Section */}
+          <div className="flex items-center gap-6">
+            <button className="relative text-[#7a5a64] p-1">
+              <Bell className="w-6 h-6 stroke-[1.5]" />
+              <span className="absolute top-1 right-1.5 w-2.5 h-2.5 bg-[#b33a3a] rounded-full border-2 border-white"></span>
+            </button>
 
-  {/* Profile Section - Aligned exactly as Image */}
-  <div className="flex items-center gap-4">
-    <div className="text-right flex flex-col justify-center">
-      <h3 className="text-lg font-bold text-[#5c1728] leading-none mb-1">
-        Julian Beaumont
-      </h3>
-      <p className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-[0.15em] leading-none">
-        Master Curator
-      </p>
-    </div>
+            <div className="h-10 w-[1px] bg-[#e9d8d8] mx-2" />
 
-    {/* Avatar - Matches the 40x40 / 48x48 Figma Scale */}
-    <div className="h-12 w-12 rounded-full border border-[#d1d9cc] overflow-hidden flex-shrink-0 bg-[#e3e8de] flex items-center justify-center">
-      <img 
-        src="https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775193397/Admin_Avatar_bfklij.png" 
-        alt="Julian Beaumont" 
-        className="w-full h-full object-cover"
-      />
-    </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right hidden sm:flex flex-col justify-center">
+                <h3 className="xl:text-lg text-s font-bold text-[#5c1728] leading-none mb-1">
+                  Julian Beaumont
+                </h3>
+                <p className="text-[10px] font-bold text-[#7a5a64] uppercase tracking-[0.15em] leading-none">
+                  Master Curator
+                </p>
+              </div>
 
-    {/* Hamburger for Mobile - Hidden on Desktop */}
-    <button 
-      onClick={() => setIsMenuOpen(true)}
-      className="lg:hidden p-2 border border-[#f1d6d6] rounded-lg text-[#5c1728] ml-2"
-    >
-      <Menu className="w-6 h-6" />
-    </button>
-  </div>
-</div>
-          
+              <div className="h-12 w-12 rounded-full border border-[#d1d9cc] overflow-hidden flex-shrink-0 bg-[#e3e8de] flex items-center justify-center">
+                <img 
+                  src="https://res.cloudinary.com/daup99ghe/image/upload/q_auto/f_auto/v1775193397/Admin_Avatar_bfklij.png" 
+                  alt="Julian Beaumont" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="lg:hidden p-2 border border-[#f1d6d6] rounded-lg text-[#5c1728] ml-2"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
         </header>
 
-        <main className="flex-1 overflow-auto p-8">
-          {children}
+        {/* MAIN CONTENT - This is the only part that scrolls */}
+        <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto">
+             {children}
+          </div>
         </main>
       </div>
     </div>
