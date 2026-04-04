@@ -39,8 +39,8 @@ export default function ShellLayout({ children }) {
         {/* Logo Section - flex-shrink-0 keeps it from squishing */}
         <div className="p-8 mb-4 flex justify-between items-center flex-shrink-0">
           <div>
-            <h1 className="text-[14px] font-bold font-manrope tracking-tight text-[#4A000E]">ATELIER ADMIN</h1>
-            <p className="text-[10px] font-semibold text-[#564242] font-inter uppercase mt-1 tracking-widest">Luxury Concierge</p>
+            <h1 className="text-[20px]  font-bold font-manrope tracking-widest text-[#6D0F1F]">ATELIER ADMIN</h1>
+            <p className="text-[12px] font-semibold text-[#564242] opacity-75 font-inter tracking-widest uppercase ">Luxury Concierge</p>
           </div>
           <button onClick={() => setIsMenuOpen(false)} className="lg:hidden p-1 text-[#5c1728]">
             <X className="w-6 h-6" />
@@ -79,7 +79,7 @@ export default function ShellLayout({ children }) {
       <div className="flex-1 flex flex-col min-w-0 h-full">
         
         {/* HEADER - Stays fixed at the top of the content area */}
-        <header className="flex-shrink-0 h-20 flex items-center justify-between bg-[#FFF8F199] px-8 border-b border-[#fdf3f3] z-30">
+        <header className="flex-shrink-0 h-20 flex items-center justify-between bg-[#FFF8F199] px-8 border-b border-[#ecdcdc] z-30">
           
           {/* SEARCH BAR */}
           <div className="flex items-center bg-[#F4EDE580]   gap-3 w-full max-w-lg">

@@ -113,18 +113,20 @@ export default function ProductsPage() {
   ];
 
   return (
-    <div className="bg-[#fdf8f4] min-h-screen box-border font-inter pt-4 pb-12">
-      <div className="flex flex-wrap gap-4 justify-between items-start mb-7 px-2 md:px-0">
+    <div className="bg-[#fdf8f4] min-h-screen box-border font-inter pt-1 pb-12">
+      <div className="flex flex-wrap gap-3 justify-between items-start mb-1 px-2 md:px-0">
         <div>
           <h2 className="m-0 text-[18px] md:text-[24px] font-manrope font-extrabold text-[#6D0F1F]">Products List</h2>
-          <p className="mt-1.5 mb-0 text-[16px] text-[#78716C] font-inter font-medium opacity-70">Manage and create your bespoke inventory collections.</p>
         </div>
-        <div className="flex bg-[#fdf8f4] p-[5px] rounded-[16px] border border-[#f1d6d6] gap-[2px]">
+      </div>
+      <div className="flex flex-wrap gap-3 justify-between items-center mb-3 px-2 md:px-0">
+        <p className="m-0 text-[15px] text-[#78716C] font-inter font-medium opacity-70">Manage and create your bespoke inventory collections.</p>
+        <div className="flex bg-[#F1EBE6] p-[5px] rounded-[14px] gap-[2px]">
           {["2D MODEL", "3D MODELS"].map(lbl => {
             const val = lbl === "2D MODEL" ? "2D" : "3D", active = type === val;
             return (
               <button key={lbl} onClick={() => setType(val)}
-                className={`px-[12px] md:px-[20px] py-[7px] text-[12px] font-inter font-semibold tracking-[0.12em] rounded-[16px] border cursor-pointer transition-all duration-200 border ${active ? 'bg-white border-[#f1d6d6] text-[#6d0f1f] shadow-[0_1px_4px_rgba(109,15,31,.1)]' : 'bg-transparent border-transparent text-[#7a5a64]'}`}>
+                className={`px-[12px] md:px-[24px] py-[8px] text-[13px] font-inter font-bold tracking-wide rounded-[10px] cursor-pointer transition-all duration-200 border-none ${active ? 'bg-white text-[#4A0A18] shadow-sm' : 'bg-transparent text-[#8A7F7A] hover:bg-black/5'}`}>
                 {lbl}
               </button>
             );
@@ -154,9 +156,9 @@ export default function ProductsPage() {
         </div>
 
         <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: "touch" }}>
-          <table className="w-full border-collapse min-w-[560px]">
+          <table className="w-full mt-4.5 border-collapse min-w-[560px]">
             <thead>
-              <tr className="border-b text-[14px] font-inter text-[#A8A29E] font-semibold border-[#fdf3f3]">
+              <tr className="border-b text-[14px] font-inter  text-[#A8A29E] font-semibold border-[#fdf3f3]">
                 <TH ch="S.No" className="pl-[28px]  text-[13px] font-inter text-[#A8A29E] font-semibold text-left" />
                 <TH ch="Image" className="text-left  text-[13px] font-inter text-[#A8A29E] font-semibold" />
                 <TH ch="Product Name" className="text-left  text-[13px] font-inter text-[#A8A29E] font-semibold" />
@@ -189,33 +191,26 @@ export default function ProductsPage() {
                       <FiMoreHorizontal size={20} />
                     </button>
                     {menu === r.id && (
-<<<<<<< HEAD
                       <div ref={menuRef} className="absolute right-[52px] top-3 z-[200] bg-[#FFFFFF] border border-[#DDC0C0] rounded-[12px] shadow-[0_4px_24px_rgba(0,0,0,0.06)] w-[256px] h-[205px] flex flex-col py-3 overflow-hidden text-left">
                         <MenuItem icon={<DropdownIcons.Settings />} label="Edit Tab Settings" onClick={() => { setModal(true); setMenu(null); }} />
-                        <MenuItem icon={<DropdownIcons.Palette />} label="Customize Data" onClick={() => setMenu(null)} />
+                        <MenuItem 
+                          icon={<DropdownIcons.Palette />} 
+                          label="Customize Data" 
+                          onClick={() => {
+                            setMenu(null);
+                            router.push(`/products/${r.id}`); 
+                          }} 
+                        />
                         <MenuItem icon={<DropdownIcons.Image />} label="Customize Image" onClick={() => setMenu(null)} />
                         <div className="mx-6 my-1 border-b border-[#f1f1f1] flex-shrink-0" />
                         <MenuItem icon={<DropdownIcons.Resize />} label="Set Width & Height" onClick={() => setMenu(null)} />
-=======
-                      <div ref={menuRef} style={{ position:"absolute", right:52, top:12, zIndex:200, background:C.white, border:`1px solid ${C.border}`, borderRadius:18, boxShadow:"0 8px 32px rgba(109,15,31,.13)", padding:"6px 0", minWidth:186 }}>
-                        <MenuItem icon={<FiSettings size={13}/>}  label="Edit Tab Settings" onClick={() => { setModal(true); setMenu(null); }} />
-<MenuItem 
-      icon={<FiDatabase size={13}/>}  
-      label="Customize Data"    
-      onClick={() => {
-        setMenu(null);
-        // Navigates to: /products/[productId]
-        // This will open your productId/page.js (The Variant Cards)
-        router.push(`/products/${r.id}`); 
-      }} 
-    />
-                       <MenuItem icon={<FiImage size={13}/>}     label="Customize Image"   onClick={() => setMenu(null)} />
-                        <MenuItem icon={<FiMaximize2 size={13}/>} label="Set Width & Height" onClick={() => setMenu(null)} />
->>>>>>> f12dc1c4e92766e8b6ab90df2c36b69b67e34c0d
                       </div>
                     )}
+
+
                   </td>
                 </tr>
+                
               ))}
             </tbody>
           </table>

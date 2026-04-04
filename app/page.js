@@ -51,13 +51,13 @@ export default function DashboardContent() {
   };
 
   return (
-    <div className="space-y-6 pb-12 px-2 md:px-0 mt-4 font-inter">
+    <div className="space-y-5 pb-12 px-2 md:px-0 mt-1 font-inter">
 
       {/* 1. HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div>
           <h2 className="text-[28px] md:text-[24px] font-extrabold text-[#4A000E] tracking-tight font-manrope">Atelier Overview</h2>
-          <p className="text-[#564242] mt-1.5 font-medium text-[14px] md:text-[16px] font-inter">Welcome back. The concierge is ready for your direction.</p>
+          <p className="text-[#564242] mt-0.5 font-medium text-[14px] md:text-[16px] font-inter">Welcome back. The concierge is ready for your direction.</p>
         </div>
         <div className="flex flex-wrap items-center gap-[14px]">
           <button onClick={() => router.push("/orders")} className="flex items-center justify-center h-[48px] gap-[10px] px-[28px] outline-none rounded-full border border-[#dfc9c3] bg-transparent text-[#4A000E] font-inter font-extrabold text-[15px] hover:bg-[#FDF8F4] transition-all tracking-[0.02em]">
@@ -78,12 +78,12 @@ export default function DashboardContent() {
       </div>
 
       {/* 2. STATS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {statsCards.map((card, i) => (
           <div
             key={i}
             onClick={() => router.push(card.path)}
-            className="bg-white p-7 rounded-[24px] w-[216px] h-[160px] relative overflow-hidden cursor-pointer transition-all hover:shadow-md group shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border-none flex flex-col justify-center"
+            className="bg-white p-6 rounded-[24px] w-full h-[150px] relative overflow-hidden cursor-pointer transition-all hover:shadow-md group shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border-none flex flex-col justify-center"
           >
             <p className="text-[13px] font-semibold font-inter text-[#564242] tracking-[0.1em] mb-2 uppercase relative z-10">{card.title}</p>
             <h3 className="text-[36px] font-extrabold text-[#4A000E] mb-2 tracking-tight leading-none relative z-10 font-manrope   ">{card.value}</h3>
@@ -98,7 +98,7 @@ export default function DashboardContent() {
         ))}
 
         {/* Dark Revenue Card */}
-        <div className="bg-[#5c1322] p-7 rounded-[24px] text-white relative overflow-hidden group shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border-none w-[206px] h-[160px] flex flex-col justify-center">
+        <div className="bg-[#5c1322] p-6 rounded-[24px] text-white relative overflow-hidden group shadow-[0px_4px_20px_rgba(0,0,0,0.08)] border-none w-full h-[150px] flex flex-col justify-center">
           <div className="relative z-10">
             <p className="text-[12px] font-semibold font-inter tracking-[0.1em] mb-2 uppercase text-[#FFE088] font-inter">TOTAL REVENUE</p>
             <h3 className="text-[36px] font-extrabold font-manrope mb-2 tracking-tight leading-none text-[#FFFFFF]">$142.8k</h3>
