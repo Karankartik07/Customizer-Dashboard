@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect, useRef } from "react";
 import { FiMoreHorizontal, FiX, FiSettings, FiDatabase, FiImage, FiCheckCircle, FiMaximize2, FiChevronLeft, FiChevronRight, FiDownload, FiSliders } from "react-icons/fi";
 
@@ -63,6 +64,7 @@ export default function ProductsPage() {
   const [type,  setType]  = useState("2D");
   const [page,  setPage]  = useState(1);
   const menuRef = useRef(null);
+  const router = useRouter(); // Initialize router
 
   const [opts, setOpts] = useState({ aiEditor:true, imageEdit:true, textEdit:true, colors:false, clipart:false });
   const [rows, setRows] = useState([
@@ -165,8 +167,17 @@ export default function ProductsPage() {
                     {menu === r.id && (
                       <div ref={menuRef} style={{ position:"absolute", right:52, top:12, zIndex:200, background:C.white, border:`1px solid ${C.border}`, borderRadius:18, boxShadow:"0 8px 32px rgba(109,15,31,.13)", padding:"6px 0", minWidth:186 }}>
                         <MenuItem icon={<FiSettings size={13}/>}  label="Edit Tab Settings" onClick={() => { setModal(true); setMenu(null); }} />
-                        <MenuItem icon={<FiDatabase size={13}/>}  label="Customize Data"    onClick={() => setMenu(null)} />
-                        <MenuItem icon={<FiImage size={13}/>}     label="Customize Image"   onClick={() => setMenu(null)} />
+<MenuItem 
+      icon={<FiDatabase size={13}/>}  
+      label="Customize Data"    
+      onClick={() => {
+        setMenu(null);
+        // Navigates to: /products/[productId]
+        // This will open your productId/page.js (The Variant Cards)
+        router.push(`/products/${r.id}`); 
+      }} 
+    />
+                       <MenuItem icon={<FiImage size={13}/>}     label="Customize Image"   onClick={() => setMenu(null)} />
                         <MenuItem icon={<FiMaximize2 size={13}/>} label="Set Width & Height" onClick={() => setMenu(null)} />
                       </div>
                     )}
