@@ -33,14 +33,14 @@ export default function ShellLayout({ children }) {
       
       {/* SIDEBAR - Slides from left */}
       <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-[#f1d6d6] transition-transform duration-300 ease-in-out flex flex-col
+        fixed inset-y-0 left-0 z-50 w-72 bg-[#FFF8F1] border-r border-[#f1d6d6] transition-transform duration-300 ease-in-out flex flex-col
         lg:relative lg:translate-x-0 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         {/* Logo Section - flex-shrink-0 keeps it from squishing */}
         <div className="p-8 mb-4 flex justify-between items-center flex-shrink-0">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-[#5c1728]">ATELIER ADMIN</h1>
-            <p className="text-[10px] font-bold text-[#7a5a64] uppercase mt-1 tracking-widest">Luxury Concierge</p>
+            <h1 className="text-[20px]  font-bold font-manrope tracking-widest text-[#6D0F1F]">ATELIER ADMIN</h1>
+            <p className="text-[12px] font-semibold text-[#564242] opacity-75 font-inter tracking-widest uppercase ">Luxury Concierge</p>
           </div>
           <button onClick={() => setIsMenuOpen(false)} className="lg:hidden p-1 text-[#5c1728]">
             <X className="w-6 h-6" />
@@ -58,7 +58,7 @@ export default function ShellLayout({ children }) {
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
                 className={`relative flex items-center gap-3 px-8 py-4 text-sm font-semibold transition-all
-                  ${isActive ? "bg-[#fdf3f3] text-[#5c1728]" : "text-[#7a5a64] hover:bg-[#faf5f5]"}
+                  ${isActive ? "bg-[#FFF8F1] text-[#5c1728]" : "text-[#7a5a64] hover:bg-[#faf5f5]"}
                 `}
               >
                 <Icon className="w-5 h-5" />
@@ -79,10 +79,10 @@ export default function ShellLayout({ children }) {
       <div className="flex-1 flex flex-col min-w-0 h-full">
         
         {/* HEADER - Stays fixed at the top of the content area */}
-        <header className="flex-shrink-0 h-20 flex items-center justify-between bg-white px-8 border-b border-[#fdf3f3] z-30">
+        <header className="flex-shrink-0 h-20 flex items-center justify-between bg-[#FFF8F199] px-8 border-b border-[#ecdcdc] z-30">
           
           {/* SEARCH BAR */}
-          <div className="flex items-center gap-3 w-full max-w-lg">
+          <div className="flex items-center bg-[#F4EDE580]   gap-3 w-full max-w-lg">
             <div className="relative flex-1 group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#aa96a3]" />
               <input

@@ -1,17 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { 
-  MdOutlineEdit, 
-  MdOutlineDeleteOutline, 
-  MdOutlineLayers, 
-  MdAdd, 
+import {
+  MdOutlineEdit,
+  MdOutlineDeleteOutline,
+  MdOutlineLayers,
+  MdAdd,
   MdFileUpload,
   MdClose,
   MdSettings
 } from "react-icons/md";
 
 export default function SubVariantPage({ params }) {
-  const brandMaroon = "#4A1D1D";
+  const brandMaroon = "#6D0F1F";
   const brandCream = "#FFF8F1";
 
   // 1. Add state for the modal
@@ -20,12 +20,12 @@ export default function SubVariantPage({ params }) {
   // Mock data matching your Figma screenshot
   const subVariants = Array(6).fill({
     title: "1 Flower",
-    image: "https://via.placeholder.com/50", 
+    image: "https://via.placeholder.com/50",
     name: "Crimson Satin Twist",
     detail: "Double-brushed satin...",
     price: "$420.00",
     wholesale: "WHOLESALE: $210",
-    preview: "https://via.placeholder.com/40", 
+    preview: "https://via.placeholder.com/40",
   });
 
   // Mock data for the categories inside the modal
@@ -36,24 +36,24 @@ export default function SubVariantPage({ params }) {
   ];
 
   return (
-    <div className="min-h-screen p-10 relative" style={{ backgroundColor: brandCream }}>
+    <div className="min-h-screen pt-1 px-10 pb-10 relative" style={{ backgroundColor: brandCream }}>
       {/* 1. Top Header Section */}
-      <header className="mb-8">
-        <nav className="text-[10px] font-bold tracking-[0.2em] text-gray-400 mb-3 uppercase">
-          PRODUCTS  &gt;  SUB-VARIANTS
+      <header className="mb-5">
+        <nav className="text-[10px] font-bold tracking-[0.2em] text-gray-400 mb-1 uppercase">
+          PRODUCTS  &gt;  <span className="text-[#6D0F1F]">SUB-VARIANTS</span>
         </nav>
-        
+
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold" style={{ color: brandMaroon }}>
+          <h1 className="text-[24px] font-extrabold text-[#4A000E] font-manrope m-0" >
             Customize Data for: Blue Pattern Ceramic Pot
           </h1>
-          
+
           <div className="flex gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white rounded-lg text-sm font-semibold hover:bg-gray-50 transition-all">
+            <button className="flex items-center gap-2 px-5 py-2.5 border border-[#DDC0C0]/40 bg-white rounded-[12px] text-[14px] font-bold font-inter hover:bg-gray-50 transition-all text-[#6D0F1F]">
               <MdFileUpload size={18} /> Export CSV
             </button>
-            <button 
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:opacity-90 transition-all"
+            <button
+              className="flex items-center gap-2 px-5 py-2.5 rounded-[12px] text-white text-[14px] font-bold font-inter hover:opacity-90 transition-all shadow-[0_8px_20px_rgba(74,29,29,.25)]"
               style={{ backgroundColor: brandMaroon }}
             >
               <MdAdd size={20} /> New Sub-Variant
@@ -63,52 +63,53 @@ export default function SubVariantPage({ params }) {
       </header>
 
       {/* 2. Table Container */}
-      <div className="bg-white rounded-[2rem] shadow-sm overflow-hidden border border-gray-100">
+      <div className="bg-white rounded-[1.5rem] shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-[#FDF8F4]">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-gray-50">
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase">Title</th>
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase">Image</th>
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase">Variant Detail</th>
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase">Price</th>
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase text-center">Preview Image</th>
-              <th className="p-6 text-[10px] font-black tracking-widest text-gray-400 uppercase text-center">Actions</th>
+            <tr className="bg-[#FAF3ED]">
+              <th className="px-8 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase">Tittle</th>
+              <th className="px-6 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase">Image</th>
+              <th className="px-6 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase">Variant Detail</th>
+              <th className="px-6 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase">Price</th>
+              <th className="px-6 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase text-center">Preview Image</th>
+              <th className="px-8 py-7 text-[11px] font-extrabold tracking-[0.15em] text-[#A8A29E] uppercase text-center">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-50">
+          <tbody>
             {subVariants.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-50/50 transition-colors">
-                <td className="p-6 text-xs text-gray-400 font-medium">{item.title}</td>
-                <td className="p-6">
-                  <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden">
+              <tr key={index} className="hover:bg-[#FDF8F4]/40 transition-colors border-b border-[#FDF8F4]">
+                <td className="px-8 py-6 text-[13px] text-[#A8A29E] font-medium">{item.title}</td>
+                <td className="px-6 py-6">
+                  <div className="w-[52px] h-[52px] rounded-[14px] bg-[#FDF8F4] overflow-hidden border border-[#E8E0D8]">
                     <img src={item.image} alt="variant" className="w-full h-full object-cover" />
                   </div>
                 </td>
-                <td className="p-6">
-                  <p className="text-sm font-bold text-gray-900 mb-0.5">{item.name}</p>
-                  <p className="text-[10px] text-gray-400">{item.detail}</p>
+                <td className="px-6 py-6">
+                  <p className="text-[16px] font-semibold text-[#4A000E] font-inter mb-1.5 w-[140px] leading-snug tracking-tight pr-4">{item.name}</p>
+                  <p className="text-[11px] text-[#A8A29E] font-inter font-medium">{item.detail}</p>
                 </td>
-                <td className="p-6">
-                  <p className="text-sm font-black text-gray-900 mb-0.5">{item.price}</p>
-                  <p className="text-[9px] font-bold text-gray-300 tracking-tighter uppercase">{item.wholesale}</p>
+                <td className="px-6 py-6">
+                  <p className="text-[16px] font-semibold text-[#4A000E] font-inter mb-1.5">{item.price}</p>
+                  <p className="text-[10px] font-bold text-[#A8A29E] tracking-tight uppercase">{item.wholesale}</p>
                 </td>
-                <td className="p-6">
-                  <div className="flex justify-center">
-                    <img src={item.preview} alt="preview" className="w-10 h-10 rounded-full border border-gray-100" />
+                <td className="px-6 py-6">
+                  <div className="flex justify-center -space-x-3">
+                    <img src={item.preview} alt="preview" className="w-[36px] h-[36px] rounded-full border-[2.5px] border-white shadow-sm bg-gray-100" />
+                    <img src={item.preview} alt="preview" className="w-[36px] h-[36px] rounded-full border-[2.5px] border-white shadow-sm bg-[#564242]" />
                   </div>
                 </td>
-                <td className="p-6">
-                  <div className="flex justify-center items-center gap-4">
-                    <MdOutlineEdit className="text-gray-400 hover:text-gray-800 cursor-pointer" size={18} />
-                    
+                <td className="px-8 py-6">
+                  <div className="flex justify-center items-center gap-[18px]">
+                    <MdOutlineEdit className="text-[#6D0F1F] hover:text-[#4A000E] cursor-pointer" size={18} />
+
                     {/* Middle Icon Click - Opens Modal */}
-                    <MdOutlineLayers 
-                      className="text-gray-400 hover:text-gray-800 cursor-pointer" 
-                      size={18} 
+                    <MdOutlineLayers
+                      className="text-[#6D0F1F] hover:text-[#4A000E] cursor-pointer"
+                      size={18}
                       onClick={() => setIsModalOpen(true)}
                     />
-                    
-                    <MdOutlineDeleteOutline className="text-red-300 hover:text-red-500 cursor-pointer" size={20} />
+
+                    <MdOutlineDeleteOutline className="text-[#6D0F1F] hover:text-[#4A000E] cursor-pointer" size={18} />
                   </div>
                 </td>
               </tr>
@@ -117,156 +118,157 @@ export default function SubVariantPage({ params }) {
         </table>
 
         {/* 3. Pagination Footer */}
-        <div className="p-6 flex justify-between items-center bg-white border-t border-gray-50">
-          <p className="text-[10px] font-bold text-gray-400">
-            Showing <span className="text-gray-900">1-10</span> of 48 variants
+        <div className="px-8 py-6 flex justify-between items-center bg-white border-t border-[#FDF8F4]">
+          <p className="text-[12px] font-medium text-[#A8A29E]">
+            Showing <span className="font-bold text-[#6D0F1F]">1-10</span> of 48 variants
           </p>
-          <div className="flex items-center gap-2">
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-100 text-gray-400 hover:bg-gray-50 text-xs">{"<"}</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#4A1D1D] text-white text-xs font-bold shadow-md">1</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-100 text-gray-400 hover:bg-gray-50 text-xs">2</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-100 text-gray-400 hover:bg-gray-50 text-xs">3</button>
-            <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-100 text-gray-400 hover:bg-gray-50 text-xs">{">"}</button>
+          <div className="flex items-center gap-3">
+            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-lg border border-[#E8E0D8] text-[#A8A29E] hover:bg-[#FAF3ED] text-xs transition-colors shadow-sm">{"<"}</button>
+            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-lg bg-[#4A000E] text-white text-xs font-bold shadow-md">1</button>
+            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-lg text-[#564242] hover:bg-[#FAF3ED] font-bold text-xs transition-colors">2</button>
+            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-lg text-[#564242] hover:bg-[#FAF3ED] font-bold text-xs transition-colors">3</button>
+            <button className="w-[34px] h-[34px] flex items-center justify-center rounded-lg border border-[#E8E0D8] text-[#A8A29E] hover:bg-[#FAF3ED] text-xs transition-colors shadow-sm">{">"}</button>
           </div>
         </div>
       </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 z-[1000] flex text-left items-center justify-center bg-black/40 backdrop-blur-[2px] p-4 sm:p-6">
-          <div className="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl p-6 md:p-10 relative animate-in fade-in zoom-in-95 duration-200 max-h-[95vh] overflow-y-auto">
-            
-            {/* Close Button */}
-            <button 
-              onClick={() => setIsModalOpen(false)} 
-              className="absolute top-6 right-6 md:top-8 md:right-8 text-gray-400 hover:text-gray-700 transition-colors"
-            >
-              <MdClose size={24} />
-            </button>
+          <div className="bg-white w-full max-w-3xl rounded-[2rem] shadow-2xl relative animate-in fade-in zoom-in-95 duration-200 flex flex-col font-inter">
 
             {/* Modal Header */}
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 rounded-xl bg-[#FAF3ED] text-[#4A1D1D]">
-                <MdSettings size={22} />
+            <div className="flex items-center justify-between px-6 md:px-8 py-5 border-b border-[#FDF8F4]">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-[#FAF3ED] text-[#4A000E]">
+                  <MdSettings size={22} />
+                </div>
+                <h2 className="text-[20px] font-bold text-[#4A000E] font-manrope m-0">
+                  Manage Subvariants
+                </h2>
               </div>
-              <h2 className="text-xl md:text-2xl font-bold" style={{ color: brandMaroon }}>
-                Manage Subvariants
-              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700 transition-colors p-2"
+              >
+                <MdClose size={24} />
+              </button>
             </div>
 
-            {/* Input Section */}
-            <div className="mb-10">
-              <p className="text-sm font-bold mb-2 uppercase tracking-widest text-[#4A1D1D]">
-                Add New Subcategory
-              </p>
-              <p className="text-xs text-gray-500 mb-5">
-                Expand your inventory architecture with precision.
-              </p>
-              
-              <div className="flex flex-col md:flex-row items-start md:items-end gap-4">
-                <div className="w-full md:flex-1">
-                  <label className="block text-[10px] font-black text-gray-500 tracking-widest uppercase mb-2">
-                    Category *
-                  </label>
-                  <input 
-                    type="text" 
-                    placeholder="Category name" 
-                    className="w-full p-3.5 bg-[#FAF3ED]/40 border border-[#F1D6D6]/50 rounded-xl text-sm outline-none focus:border-[#4A1D1D]/50 transition-colors placeholder:text-gray-400" 
-                  />
+            <div className="px-6 md:px-8 pt-6 pb-2 max-h-[70vh] overflow-y-auto">
+              {/* Input Section */}
+              <div className="mb-6">
+                <h3 className="text-[18px] font-bold text-[#4A000E] font-manrope mb-1">
+                  Add New Subcategory
+                </h3>
+                <p className="text-[14px] font-regular font-inter text-[#564242] mb-4">
+                  Expand your inventory architecture with precision.
+                </p>
+
+                <div className="flex flex-col md:flex-row items-end gap-4">
+                  <div className="w-full md:flex-1">
+                    <label className="block text-[12px] font-semibold  font-inter text-[#564242] tracking-widest uppercase mb-2">
+                      Category *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Category name"
+                      className="w-full py-3.5 px-4 bg-[#FAF3ED] rounded-[10px] text-[16px] font-inter outline-none text-[#A09F9E] placeholder:text-[#A8A29E] border-none font-medium"
+                    />
+                  </div>
+                  <div className="w-full md:flex-1">
+                    <label className="block text-[12px] font-semibold  font-inter text-[#564242] tracking-widest uppercase mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Italian Wool"
+                      className="w-full py-3.5 px-4 bg-[#FAF3ED] rounded-[10px] text-[16px] font-inter outline-none text-[#A09F9E] placeholder:text-[#A8A29E] border-none font-medium"
+                    />
+                  </div>
+                  <button className="w-full md:w-auto bg-[#24B5B5] text-white font-bold py-3.5 px-6 rounded-[10px] text-[13px] flex items-center justify-center hover:bg-[#1E9B9B] transition-all whitespace-nowrap shadow-sm shadow-[#24B5B5]/20">
+                    <span className="text-[24px]  font-inter font-semibold mr-1 leading-none mt-[-2px]">+</span> Add Subcategory
+                  </button>
                 </div>
-                <div className="w-full md:flex-1">
-                  <label className="block text-[10px] font-black text-gray-500 tracking-widest uppercase mb-2">
-                    Name *
-                  </label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. Italian Wool" 
-                    className="w-full p-3.5 bg-[#FAF3ED]/40 border border-[#F1D6D6]/50 rounded-xl text-sm outline-none focus:border-[#4A1D1D]/50 transition-colors placeholder:text-gray-400" 
-                  />
-                </div>
-                <button className="w-full md:w-auto bg-[#24B5B5] text-white font-bold py-3.5 px-6 rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-[#1E9B9B] transition-all whitespace-nowrap shadow-sm">
-                  <MdAdd size={20} /> Add Subcategory
-                </button>
               </div>
-            </div>
 
-            {/* Subcategories List */}
-            <div>
-              <p className="text-sm font-bold mb-5 uppercase tracking-widest text-[#4A1D1D]">
-                Subcategories (3)
-              </p>
-
-              {/* Desktop View */}
-              <div className="hidden md:block">
-                <div className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 bg-[#FAF3ED]/70 p-4 rounded-2xl mb-2 items-center">
-                  <div className="text-[11px] font-bold text-[#4A1D1D]/70 tracking-widest uppercase pl-4">Name</div>
-                  <div className="text-[11px] font-bold text-[#4A1D1D]/70 tracking-widest uppercase text-center">Category</div>
-                  <div className="text-[11px] font-bold text-[#4A1D1D]/70 tracking-widest uppercase text-center">Status</div>
-                  <div className="text-[11px] font-bold text-[#4A1D1D]/70 tracking-widest uppercase text-center">Actions</div>
+              {/* Subcategories List */}
+              <div className="mb-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <h3 className="text-[18px] font-bold text-[#4A000E] font-manrope whitespace-nowrap m-0">
+                    Subcategories (3)
+                  </h3>
+                  <div className="flex-1 h-[1px] bg-[#FDF8F4]"></div>
                 </div>
 
-                <div className="space-y-1">
-                  {modalCategories.map((item, idx) => (
-                    <div key={idx} className="grid grid-cols-[2fr_1fr_1fr_1fr] gap-4 items-center p-4 hover:bg-gray-50/50 rounded-2xl transition-colors border border-transparent hover:border-gray-100">
-                      <span className="text-sm font-bold text-gray-800 pl-4">{item.name}</span>
-                      <div className="flex justify-center">
-                        <span className="text-[11px] font-bold text-gray-600 bg-[#FAF3ED] px-4 py-1.5 rounded-full tracking-wide">
-                          {item.category}
-                        </span>
-                      </div>
-                      <div className="flex justify-center">
-                        <div className={`w-10 h-5 rounded-full relative ${item.status ? 'bg-[#D4A017]' : 'bg-gray-200'} cursor-pointer hover:opacity-90 transition-opacity`}>
-                          <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all shadow-sm ${item.status ? 'right-0.5' : 'left-0.5'}`} />
+                {/* Desktop View */}
+                <div className="hidden md:block">
+                  <div className="grid grid-cols-[2.5fr_1.5fr_1fr_1fr] bg-[#FAF3ED] py-3 px-6 rounded-[12px] mb-2 items-center">
+                    <div className="text-[12px] font-semibold font-inter  text-[#564242] tracking-[0.1em] uppercase pl-2">Name</div>
+                    <div className="text-[12px] font-se mibold font-inter text-[#564242] tracking-[0.1em] uppercase text-left">Category</div>
+                    <div className="text-[12px] font-semibold font-inter text-[#564242] tracking-[0.1em] uppercase text-left">Status</div>
+                    <div className="text-[12px] font-semibold font-inter text-[#564242] tracking-[0.1em] uppercase text-center pr-2">Actions</div>
+                  </div>
+
+                  <div className="flex flex-col w-full">
+                    {modalCategories.map((item, idx) => (
+                      <div key={idx} className={`grid grid-cols-[2.5fr_1.5fr_1fr_1fr] gap-4 items-center py-3.5 px-6 hover:bg-[#FDF8F4]/40 transition-colors ${idx !== modalCategories.length - 1 ? 'border-b border-[#FDF8F4]' : ''}`}>
+                        <span className="text-[16px] font-semibold text-[#1E1B17] font-inter pl-2">{item.name}</span>
+                        <div className="flex justify-start">
+                          <span className="text-[11px] font-bold text-[#A8A29E] bg-[#FDF8F4] px-3.5 py-1.5 rounded-[10px] whitespace-nowrap">
+                            {item.category}
+                          </span>
+                        </div>
+                        <div className="flex justify-start pl-1">
+                          <div className={`w-[44px] h-[24px] rounded-full relative ${item.status ? 'bg-[#D6B445]' : 'bg-[#E8E0D8]'} cursor-pointer hover:opacity-90 transition-opacity`}>
+                            <div className={`absolute top-[2px] w-[20px] h-[20px] bg-white rounded-full transition-all shadow-sm ${item.status ? 'right-[2px]' : 'left-[2px]'}`} />
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-center gap-[18px]">
+                          <MdOutlineEdit className="text-[#4A000E] hover:opacity-75 cursor-pointer" size={31} />
+                          <MdOutlineDeleteOutline className="text-[#4A000E] hover:opacity-75 cursor-pointer" size={31} />
                         </div>
                       </div>
-                      <div className="flex items-center justify-center gap-4">
-                        <MdOutlineEdit className="text-[#4A1D1D]/60 hover:text-[#4A1D1D] cursor-pointer transition-colors" size={18} />
-                        <MdOutlineDeleteOutline className="text-[#4A1D1D]/60 hover:text-red-500 cursor-pointer transition-colors" size={20} />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Mobile View */}
+                <div className="md:hidden space-y-4">
+                  {modalCategories.map((item, idx) => (
+                    <div key={idx} className="p-5 bg-white border border-[#FDF8F4] rounded-[16px] shadow-sm flex flex-col gap-4">
+                      <div className="flex justify-between items-start gap-4">
+                        <div>
+                          <span className="text-[16px] font-semibold text-[#1E1B17] font-inter block mb-2">{item.name}</span>
+                          <span className="inline-block text-[11px] font-bold text-[#A8A29E] bg-[#FDF8F4] px-3.5 py-1.5 rounded-[10px]">
+                            {item.category}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-[14px] bg-[#FAF3ED]/40 p-2.5 rounded-xl">
+                          <MdOutlineEdit className="text-[#4A000E] cursor-pointer" size={34} />
+                          <MdOutlineDeleteOutline className="text-[#4A000E] cursor-pointer" size={34} />
+                        </div>
+                      </div>
+                      <div className="pt-3 border-t border-[#FDF8F4] flex justify-between items-center">
+                        <span className="text-[10px] font-extrabold text-[#8C827A] uppercase tracking-widest">Status</span>
+                        <div className={`w-[44px] h-[24px] rounded-full relative ${item.status ? 'bg-[#D6B445]' : 'bg-[#E8E0D8]'} cursor-pointer`}>
+                          <div className={`absolute top-[2px] w-[20px] h-[20px] bg-white rounded-full transition-all ${item.status ? 'right-[2px]' : 'left-[2px]'}`} />
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Mobile View */}
-              <div className="md:hidden space-y-4">
-                {modalCategories.map((item, idx) => (
-                  <div key={idx} className="p-5 bg-white border border-[#FAF3ED] sm:shadow-sm shadow-md rounded-2xl flex flex-col gap-4 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-[#FAF3ED]"></div>
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <span className="text-sm font-bold text-gray-800 block mb-2">{item.name}</span>
-                        <span className="inline-block text-[10px] font-bold text-gray-600 bg-[#FAF3ED] px-3 py-1 rounded-full tracking-wide">
-                          {item.category}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-[#FAF3ED]/30 p-2 rounded-xl">
-                        <MdOutlineEdit className="text-[#4A1D1D]/60 hover:text-[#4A1D1D] cursor-pointer p-1" size={24} />
-                        <div className="w-[1px] h-4 bg-gray-200"></div>
-                        <MdOutlineDeleteOutline className="text-[#4A1D1D]/60 hover:text-red-500 cursor-pointer p-1" size={24} />
-                      </div>
-                    </div>
-                    <div className="pt-3 border-t border-gray-50 flex justify-between items-center">
-                      <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">Status</span>
-                      <div className={`w-10 h-5 rounded-full relative ${item.status ? 'bg-[#D4A017]' : 'bg-gray-200'} cursor-pointer`}>
-                        <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all ${item.status ? 'right-0.5' : 'left-0.5'}`} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            {/* Modal Footer */}
-            <div className="mt-8 flex justify-end items-center gap-3">
-              <button 
-                onClick={() => setIsModalOpen(false)} 
-                className="px-6 py-3 rounded-xl text-sm font-bold text-gray-500 hover:text-gray-800 hover:bg-gray-50 transition-all"
+            <div className="bg-[#FAF3ED] px-6 md:px-8 py-4 rounded-b-[2rem] flex justify-end items-center gap-6 mt-auto">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-[13px] font-extrabold text-[#8C827A] hover:text-[#564242] transition-colors font-inter"
               >
                 Cancel
               </button>
-              <button 
-                className="px-8 py-3 rounded-xl text-white text-sm font-bold shadow-lg shadow-[#4A1D1D]/10 hover:opacity-90 transition-all active:scale-95" 
-                style={{ backgroundColor: brandMaroon }}
+              <button
+                className="bg-[#4A000E] text-white px-8 py-3 rounded-[12px] text-[13px] font-bold shadow-[0_8px_20px_rgba(74,0,14,.15)] hover:bg-[#3A000A] transition-all font-inter"
               >
                 Save Changes
               </button>
@@ -274,7 +276,7 @@ export default function SubVariantPage({ params }) {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 }
